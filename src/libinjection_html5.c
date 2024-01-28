@@ -89,7 +89,7 @@ void libinjection_h5_init(h5_state_t *hs, const char *s, size_t len,
 /**
  * public function
  */
-injection_result_t libinjection_h5_next(h5_state_t* hs)
+int libinjection_h5_next(h5_state_t* hs)
 {
     if (hs->state == NULL) {
         return RESULT_ERROR;
@@ -173,7 +173,7 @@ static injection_result_t h5_state_data(h5_state_t *hs) {
 /**
  * 12 2.4.8
  */
-static injection_result_t h5_state_tag_open(h5_state_t* hs)
+static int h5_state_tag_open(h5_state_t* hs)
 {
     char ch;
 
@@ -257,7 +257,7 @@ static injection_result_t h5_state_tag_name_close(h5_state_t *hs) {
 /**
  * 12.2.4.10
  */
-static injection_result_t h5_state_tag_name(h5_state_t* hs)
+static int h5_state_tag_name(h5_state_t* hs)
 {
     char ch;
     size_t pos;
@@ -575,7 +575,7 @@ static injection_result_t h5_state_after_attribute_value_quoted_state(h5_state_t
  *  WARNING: This function is partially inlined into
  * h5_state_before_attribute_name()
  */
-static injection_result_t h5_state_self_closing_start_tag(h5_state_t* hs)
+static int h5_state_self_closing_start_tag(h5_state_t* hs)
 {
     char ch;
 
@@ -627,7 +627,7 @@ static injection_result_t h5_state_bogus_comment(h5_state_t *hs) {
  * 12.2.4.44 ALT
  */
 static injection_result_t h5_state_bogus_comment2(h5_state_t *hs) {
-    const char *idx;
+    const char* idx;
     size_t pos;
 
     TRACE();
@@ -820,7 +820,7 @@ static injection_result_t h5_state_cdata(h5_state_t *hs) {
  * http://www.w3.org/html/wg/drafts/html/master/syntax.html#doctype-state
  */
 static injection_result_t h5_state_doctype(h5_state_t *hs) {
-    const char *idx;
+    const char* idx;
 
     TRACE();
     hs->token_start = hs->s + hs->pos;
