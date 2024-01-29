@@ -41,7 +41,7 @@
 /* faster than calling out to libc isdigit */
 #define ISDIGIT(a) ((unsigned)((a) - '0') <= 9)
 
-#if 0
+#ifdef DEBUG
 #define FOLD_DEBUG printf("%d \t more=%d  pos=%d left=%d\n", __LINE__, more, (int)pos, (int)left);
 #else
 #define FOLD_DEBUG
@@ -2253,7 +2253,7 @@ libinjection_sqli_get_token(struct libinjection_sqli_state * sql_state, int i)
     return &(sql_state->tokenvec[i]);
 }
 
-injection_result_t libinjection_is_sqli(struct libinjection_sqli_state * sql_state)
+int libinjection_is_sqli(struct libinjection_sqli_state * sql_state)
 {
     const char *s = sql_state->s;
     size_t slen = sql_state->slen;
@@ -2273,10 +2273,13 @@ injection_result_t libinjection_is_sqli(struct libinjection_sqli_state * sql_sta
                           sql_state->fingerprint, strlen(sql_state->fingerprint))) {
         return RESULT_TRUE;
     } else if (reparse_as_mysql(sql_state)) {
-        libinjection_sqli_fingerprint(sql_state, FLAG_QUOTE_NONE | FLAG_SQL_MYSQL);
-        if (sql_state->lookup(sql_state, LOOKUP_FINGERPRINT,
-                              sql_state->fingerprint, strlen(sql_state->fingerprint))) {
-            return RESULT_TRUE
+      libinjection_sqli_fingerprint(sql_state,
+                                    FLAG_QUOTE_NONE | FLAG_SQL_MYSQL);
+      if (sql_state->lookup(sql_state, LOOKUP_FINGERPRINT,
+                            sql_state->fingerprint,
+                            strlen(sql_state->fingerprint))) {
+        return RESULT_TRUE;
+      }
     }
 
     /*
@@ -2319,7 +2322,7 @@ injection_result_t libinjection_is_sqli(struct libinjection_sqli_state * sql_sta
     return RESULT_FALSE;
 }
 
-int libinjection_sqli(const char* s, size_t slen, char fingerprint[])
+injection_result_t libinjection_sqli(const char* s, size_t slen, char fingerprint[])
 {
     int issqli;
     struct libinjection_sqli_state state;

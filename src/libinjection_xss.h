@@ -12,6 +12,7 @@ extern "C" {
 /* pull in size_t */
 
 #include <string.h>
+#include "libinjection.h"
 #include "libinjection_html5.h"
 
 injection_result_t libinjection_is_xss(const char* s, size_t len, int flags);
