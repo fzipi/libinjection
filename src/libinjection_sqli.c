@@ -44,10 +44,8 @@
 /* faster than calling out to libc isdigit */
 #define ISDIGIT(a) ((unsigned)((a) - '0') <= 9)
 
-#if 0
-#define FOLD_DEBUG                                                             \
-    printf("%d \t more=%d  pos=%d left=%d\n", __LINE__, more, (int)pos,        \
-           (int)left);
+#ifdef DEBUG
+#define FOLD_DEBUG printf("%d \t more=%d  pos=%d left=%d\n", __LINE__, more, (int)pos, (int)left);
 #else
 #define FOLD_DEBUG
 #endif
@@ -2308,6 +2306,7 @@ int libinjection_is_sqli(struct libinjection_sqli_state *sql_state) {
 }
 
 int libinjection_sqli(const char *s, size_t slen, char fingerprint[]) {
+{
     int issqli;
     struct libinjection_sqli_state state;
 
